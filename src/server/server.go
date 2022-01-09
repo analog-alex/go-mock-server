@@ -2,7 +2,7 @@ package server
 
 import (
     "fmt"
-    "mockServer/parser"
+    "mockServer/src/parser"
     "net/http"
 )
 
