@@ -1,0 +1,11 @@
+{
+  "endpoints": [
+    {
+      "uri": "/test",
+      "response": {
+        "status_code": 200,
+        "body": "{ \"payload\": \"This is a response body!\" }"
+      }
+    }
+  ]
+}
