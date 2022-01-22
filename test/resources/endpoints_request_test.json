@@ -1,0 +1,20 @@
+{
+  "endpoints": [
+    {
+      "uri": "/test/2",
+      "request": {
+        "query_params": {
+          "name": ["Miguel"]
+        },
+        "headers": {
+          "Authorization": ["token"]
+        },
+        "body": "{ \"payload\": \"This is a body!\" }"
+      },
+      "response": {
+        "status_code": 200,
+        "body": "{ \"payload\": \"This is a test!\" }"
+      }
+    }
+  ]
+}
