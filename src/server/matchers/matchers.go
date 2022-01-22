@@ -11,9 +11,8 @@ func EqualMaps(m1 map[string][]string, m2 map[string][]string) bool {
 
 // MatchMaps check for sub sets matching i.e. if m1 is a superset of m2
 func MatchMaps(m1 map[string][]string, m2 map[string][]string) bool {
-	for key, value := range m1 {
-		arrValue := m2[key]
-		if arrValue != nil && !reflect.DeepEqual(value, arrValue) {
+	for key, value := range m2 {
+		if !reflect.DeepEqual(value, m1[key]) {
 			return false
 		}
 	}

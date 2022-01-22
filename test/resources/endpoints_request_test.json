@@ -4,10 +4,14 @@
       "uri": "/test/2",
       "request": {
         "query_params": {
-          "name": ["Miguel"]
+          "name": [
+            "Miguel"
+          ]
         },
         "headers": {
-          "Authorization": ["token"]
+          "Authorization": [
+            "token"
+          ]
         },
         "body": "{ \"payload\": \"This is a body!\" }"
       },
