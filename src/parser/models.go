@@ -13,7 +13,7 @@ type Response struct {
 
 type Endpoint struct {
 	Uri      string
-	Request  Request
+	Request  *Request
 	Response Response
 }
 
