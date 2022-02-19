@@ -24,21 +24,22 @@ func RunServer(port string, endpoints []parser.Endpoint) bool {
 
 func createHandlerForEndpoint(endpoint parser.Endpoint) func(http.ResponseWriter, *http.Request) {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		// TODO refactor query and headers matching to another module
-		// compare query params
-		if len(endpoint.Request.QueryParams) > 0 && !matchers.EqualMaps(request.URL.Query(), endpoint.Request.QueryParams) {
-			_ = fmt.Errorf("query params did not match. Expected %T got %T\n", endpoint.Request.QueryParams, request.URL.Query())
-			writer.WriteHeader(404)
-			return
-		}
 
-		// compare headers
-		if len(endpoint.Request.Headers) > 0 && !matchers.MatchMaps(request.Header, endpoint.Request.Headers) {
-			_ = fmt.Errorf("headers did not match. Expected %T got %T\n", endpoint.Request.Headers, request.Header)
-			writer.WriteHeader(404)
-			return
+		if endpoint.Request != nil {
+			// compare query params
+			if !matchers.EqualMaps(request.URL.Query(), endpoint.Request.QueryParams) {
+				_ = fmt.Errorf("query params did not match. Expected %T got %T\n", endpoint.Request.QueryParams, request.URL.Query())
+				writer.WriteHeader(404)
+				return
+			}
+
+			// compare headers
+			if !matchers.MatchMaps(request.Header, endpoint.Request.Headers) {
+				_ = fmt.Errorf("headers did not match. Expected %T got %T\n", endpoint.Request.Headers, request.Header)
+				writer.WriteHeader(404)
+				return
+			}
 		}
-		// -----------------------------------------------------
 
 		// set Content-Type header
 		writer.Header().Set("Content-Type", "application/json")

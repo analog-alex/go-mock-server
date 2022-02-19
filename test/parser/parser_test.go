@@ -36,6 +36,10 @@ func TestParser(t *testing.T) {
 	if response.Body != "{ \"payload\": \"This is a test!\" }" {
 		t.Fatalf("Status code %s was not '\"{ \"payload\": \"This is a test!\" }\"'", response.Body)
 	}
+
+	if testSubject.Request != nil {
+		t.Fatalf("Request structure should not be present")
+	}
 }
 
 /*
@@ -49,6 +53,10 @@ func TestParserWithRequest(t *testing.T) {
 	}
 
 	testSubject := result[0].Request
+
+	if testSubject == nil {
+		t.Fatalf("Request structure should be present")
+	}
 
 	// check query params
 	params := make(map[string][]string)
