@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  mock-server:
+    build: .
+    environment:
+      SERVER_PORT: 8080
+      ENDPOINTS_FILE_PATH: "/dir/endpoints.json"
+    volumes:
+      - ./json_examples:/dir
+    ports:
+      - "8080:8080"
