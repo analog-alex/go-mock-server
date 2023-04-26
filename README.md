@@ -4,6 +4,18 @@
 
 A simple mock server configurable via JSON, built using GoLang. Go gophers!
 
+
+## Run it with Docker
+
+Checkout the project with **git clone**.
+Assuming Docker is installed on your machine, run the following commands:
+
+```bash
+docker-compose up -d
+````
+
+Will build the image and run the container in PORT 8080 with the endpoints defined in `json_examples/endpoints.json`.
+
 ## Run it locally
 
 Checkout the project with **git clone**.
