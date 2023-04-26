@@ -1,4 +1,4 @@
-## Simple GET test using GoLang built in HTTP tester
+### Simple GET test using GoLand built in HTTP tester
 
 # GET test
 GET http://localhost:8080/test

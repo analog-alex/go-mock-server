@@ -1,7 +1,7 @@
 package matchers
 
 import (
-	"mockServer/src/server/matchers"
+	"io.analog.alex.mockserver/pkg/server/matchers"
 	"testing"
 )
 

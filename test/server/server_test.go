@@ -1,7 +1,7 @@
 package server
 
 import (
-	"mockServer/src/parser"
+	"io.analog.alex.mockserver/pkg/parser"
 	"testing"
 )
 

@@ -2,8 +2,8 @@ package server
 
 import (
 	"fmt"
-	"mockServer/src/parser"
-	"mockServer/src/server/matchers"
+	"io.analog.alex.mockserver/pkg/parser"
+	"io.analog.alex.mockserver/pkg/server/matchers"
 	"net/http"
 )
 

@@ -1,3 +1,3 @@
-module mockServer
+module io.analog.alex.mockserver
 
-go 1.16
+go 1.19

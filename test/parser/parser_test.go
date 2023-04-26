@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"mockServer/src/parser"
+	"io.analog.alex.mockserver/pkg/parser"
 	"reflect"
 	"testing"
 )
@@ -12,7 +12,7 @@ const (
 )
 
 /*
- Test simple JSON endpoint with no request content
+Test simple JSON endpoint with no request content
 */
 func TestParser(t *testing.T) {
 	result := parser.LoadEndpointsFromContext(path1)
@@ -43,7 +43,7 @@ func TestParser(t *testing.T) {
 }
 
 /*
- Test JSON endpoint with defined request content
+Test JSON endpoint with defined request content
 */
 func TestParserWithRequest(t *testing.T) {
 	result := parser.LoadEndpointsFromContext(path2)

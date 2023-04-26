@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"mockServer/src/parser"
-	"mockServer/src/server"
+	"io.analog.alex.mockserver/pkg/parser"
+	"io.analog.alex.mockserver/pkg/server"
 	"os"
 	"strconv"
 )
@@ -22,6 +22,7 @@ var (
 func main() {
 	fmt.Printf("%s made with ❤️ by %s %s \n", name, author, at)
 
+	// load context from ENV VARS if they are present
 	loadContext()
 
 	fmt.Printf("Start server at '%d' with endpoints file: (%s)\n", port, defaultPath)
