@@ -20,15 +20,13 @@ jobs:
       - name: Install dependencies
         run: |
           go version
-          go get -u golang.org/x/lint/golint
 
       - name: Run build
         run: go build ./cmd/main.go
 
       - name: Run vet & lint
         run: |
-          go vet cmd/
-          golint cmd/
+          go vet ./cmd/main.go
 
       - name: Run Tests
         run: go test ./test/...
