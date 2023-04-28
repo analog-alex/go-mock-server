@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func parseJsonFile(fileName string) string {
+func getJsonByFileName(fileName string) string {
 	data, err := os.ReadFile(fileName)
 	if err != nil {
 		panic(fmt.Sprintf("No file %s found to load", fileName))
@@ -17,7 +17,7 @@ func parseJsonFile(fileName string) string {
 }
 
 func LoadEndpointsFromContext(fileName string) []Endpoint {
-	content := parseJsonFile(fileName)
+	content := getJsonByFileName(fileName)
 	var endpoints Endpoints
 
 	err := json.Unmarshal([]byte(content), &endpoints)

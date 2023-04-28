@@ -18,5 +18,9 @@ type Endpoint struct {
 }
 
 type Endpoints struct {
-	Endpoints []Endpoint
+	Name        string
+	Version     string
+	Description string
+	Authors     []string
+	Endpoints   []Endpoint
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io.analog.alex.mockserver/pkg/parser"
 	"io.analog.alex.mockserver/pkg/server/matchers"
+	"log"
 	"net/http"
 )
 
@@ -15,7 +16,7 @@ func RunServer(port string, endpoints []parser.Endpoint) bool {
 
 	err := http.ListenAndServe(fmt.Sprintf("%s", port), nil /* nothing goes here */)
 	if err != nil {
-		_ = fmt.Errorf("server failed to boot")
+		log.Println(err)
 		return false
 	}
 
@@ -27,15 +28,17 @@ func createHandlerForEndpoint(endpoint parser.Endpoint) func(http.ResponseWriter
 
 		if endpoint.Request != nil {
 			// compare query params
-			if !matchers.EqualMaps(request.URL.Query(), endpoint.Request.QueryParams) {
-				_ = fmt.Errorf("query params did not match. Expected %T got %T\n", endpoint.Request.QueryParams, request.URL.Query())
+			if !matchers.AreMapsEqual(request.URL.Query(), endpoint.Request.QueryParams) {
+				err := fmt.Errorf("query params did not match. Expected %T got %T\n", endpoint.Request.QueryParams, request.URL.Query())
+				log.Println(err)
 				writer.WriteHeader(404)
 				return
 			}
 
 			// compare headers
-			if !matchers.MatchMaps(request.Header, endpoint.Request.Headers) {
-				_ = fmt.Errorf("headers did not match. Expected %T got %T\n", endpoint.Request.Headers, request.Header)
+			if !matchers.IsMapASubset(request.Header, endpoint.Request.Headers) {
+				err := fmt.Errorf("headers did not match. Expected %T got %T\n", endpoint.Request.Headers, request.Header)
+				log.Println(err)
 				writer.WriteHeader(404)
 				return
 			}
@@ -50,7 +53,11 @@ func createHandlerForEndpoint(endpoint parser.Endpoint) func(http.ResponseWriter
 		// output the body
 		_, err := fmt.Fprintf(writer, endpoint.Response.Body)
 		if err != nil {
-			panic(fmt.Sprintf("Error at endpoint %s", endpoint.Uri))
+			log.Println(err)
+			writer.WriteHeader(500)
+			return
 		}
+
+		log.Printf("Handled request %s\n", request.URL)
 	}
 }

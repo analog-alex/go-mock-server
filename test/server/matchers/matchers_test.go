@@ -15,7 +15,7 @@ func TestEqualMaps(t *testing.T) {
 	testSubjectTwo["one"] = []string{"first"}
 	testSubjectTwo["two"] = []string{"second"}
 
-	result := matchers.EqualMaps(testSubjectOne, testSubjectTwo)
+	result := matchers.AreMapsEqual(testSubjectOne, testSubjectTwo)
 
 	if !result {
 		t.Fatalf("Maps should equal one another.")
@@ -32,7 +32,7 @@ func TestUnequalMaps(t *testing.T) {
 	testSubjectTwo["one"] = []string{"first"}
 	testSubjectTwo["three"] = []string{"third"}
 
-	result := matchers.EqualMaps(testSubjectOne, testSubjectTwo)
+	result := matchers.AreMapsEqual(testSubjectOne, testSubjectTwo)
 
 	if result {
 		t.Fatalf("Maps should not equal one another.")
@@ -48,7 +48,7 @@ func TestMatchingMaps(t *testing.T) {
 	testSubjectTwo := make(map[string][]string)
 	testSubjectTwo["one"] = []string{"first"}
 
-	result := matchers.MatchMaps(testSubjectOne, testSubjectTwo)
+	result := matchers.IsMapASubset(testSubjectOne, testSubjectTwo)
 
 	if !result {
 		t.Fatalf("Maps should match one another.")
@@ -64,7 +64,7 @@ func TestNonMatchingMaps(t *testing.T) {
 	testSubjectTwo := make(map[string][]string)
 	testSubjectTwo["three"] = []string{"third"}
 
-	result := matchers.MatchMaps(testSubjectOne, testSubjectTwo)
+	result := matchers.IsMapASubset(testSubjectOne, testSubjectTwo)
 
 	if result {
 		t.Fatalf("Maps should not match one another.")
