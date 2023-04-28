@@ -20,19 +20,33 @@ var (
 	defaultPath     = "endpoints.json"
 )
 
+type bootParameters struct {
+	hostnameAndPort string
+	endpointsPath   string
+}
+
 func main() {
 	fmt.Printf("%s made with ❤️ by %s %s \n", name, author, at)
 
 	// load context from ENV VARS if they are present -- this will set default values to config values
-	loadEnv()
+	parameters := loadEnv()
 
-	fmt.Printf("Start server at '%d' with endpoints file: (%s)\n", defaultPort, defaultPath)
-	server.RunServer(
-		fmt.Sprintf("%s:%d", defaultHostname, defaultPort), parser.LoadEndpointsFromContext(defaultPath),
+	// tell the main info to console before we parse file and start server (main.go is the only place where we use fmt)
+	fmt.Printf("Starting server at '%s' with endpoints file: (%s)\n",
+		parameters.hostnameAndPort, parameters.endpointsPath)
+
+	root := parser.LoadEndpointsFromContext(parameters.endpointsPath)
+
+	// spit out some facts about the endpoints we just loaded
+	fmt.Printf("Loaded %d endpoints, version: %s, authors: %v, description: %s \n",
+		len(root.Endpoints), root.Version, root.Authors, root.Description,
 	)
+
+	// run the server (program will block here until it is stopped)
+	server.RunServer(parameters.hostnameAndPort, root.Endpoints)
 }
 
-func loadEnv() {
+func loadEnv() *bootParameters {
 	// check for ENV VARS
 	var port = os.Getenv("SERVER_PORT")
 	var hostname = os.Getenv("SERVER_HOSTNAME")
@@ -57,5 +71,10 @@ func loadEnv() {
 	// set path from ENDPOINTS_FILE_PATH if env var is present
 	if contextPath != "" {
 		defaultPath = contextPath
+	}
+
+	return &bootParameters{
+		hostnameAndPort: fmt.Sprintf("%s:%d", defaultHostname, defaultPort),
+		endpointsPath:   defaultPath,
 	}
 }

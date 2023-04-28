@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"github.com/stretchr/testify/assert"
 	"io.analog.alex.mockserver/pkg/parser"
 	"reflect"
 	"testing"
@@ -12,70 +13,61 @@ const (
 )
 
 /*
-Test simple JSON endpoint with no request content
+Tests for the parser package
 */
-func TestParser(t *testing.T) {
+func TestParserMetadata(t *testing.T) {
+	a := assert.New(t)
+
 	result := parser.LoadEndpointsFromContext(path1)
 
-	if len(result) != 1 {
-		t.Fatalf("Parsed file did not retrieve one endpoint")
-	}
-
-	testSubject := result[0]
-
-	if testSubject.Uri != "/test" {
-		t.Fatalf("Endpoint uri %s was not '/test'", testSubject.Uri)
-	}
-
-	response := testSubject.Response
-
-	if response.StatusCode != 202 {
-		t.Fatalf("Status code %d was not '202'", response.StatusCode)
-	}
-
-	if response.Body != "{ \"payload\": \"This is a test!\" }" {
-		t.Fatalf("Status code %s was not '\"{ \"payload\": \"This is a test!\" }\"'", response.Body)
-	}
-
-	if testSubject.Request != nil {
-		t.Fatalf("Request structure should not be present")
-	}
+	// assert metadata
+	a.Equal("1.0.0", result.Version)
+	a.Equal("This is a test", result.Description)
+	a.Equal([]string{"Miguel Alexandre"}, result.Authors)
 }
 
-/*
-Test JSON endpoint with defined request content
-*/
-func TestParserWithRequest(t *testing.T) {
+func TestParser(t *testing.T) {
+	a := assert.New(t)
+
+	result := parser.LoadEndpointsFromContext(path1)
+	a.Equal(1, len(result.Endpoints))
+
+	// get the first (and only) route
+	testSubject := result.Endpoints[0]
+	a.Equal("/test", testSubject.Uri)
+
+	// assert on response
+	response := testSubject.Response
+	a.Equal(202, response.StatusCode)
+	a.Equal("{ \"payload\": \"This is a test!\" }", response.Body)
+
+	// assert on request
+	request := testSubject.Request
+	a.Nilf(request, "Request structure should not be present")
+}
+
+func TestParserRequest(t *testing.T) {
+	a := assert.New(t)
+
 	result := parser.LoadEndpointsFromContext(path2)
+	a.Equal(1, len(result.Endpoints))
 
-	if len(result) != 1 {
-		t.Fatalf("Parsed file did not retrieve one endpoint")
-	}
+	// get the first (and only) route with a request
+	testSubject := result.Endpoints[0].Request
+	a.NotNilf(testSubject, "Request structure should be present")
 
-	testSubject := result[0].Request
+	// assert on query params
+	paramsExpected := make(map[string][]string)
+	paramsExpected["name"] = []string{"Miguel"}
 
-	if testSubject == nil {
-		t.Fatalf("Request structure should be present")
-	}
+	a.True(reflect.DeepEqual(paramsExpected, testSubject.QueryParams), "Query params did not match")
 
-	// check query params
-	params := make(map[string][]string)
-	params["name"] = []string{"Miguel"}
+	// assert on headers
+	headersExpected := make(map[string][]string)
+	headersExpected["Authorization"] = []string{"token"}
 
-	if !reflect.DeepEqual(testSubject.QueryParams, params) {
-		t.Fatalf("QueryParams map did not match %s", params)
-	}
+	a.True(reflect.DeepEqual(headersExpected, testSubject.Headers), "Headers did not match")
 
-	// check headers
-	headers := make(map[string][]string)
-	headers["Authorization"] = []string{"token"}
-
-	if !reflect.DeepEqual(testSubject.Headers, headers) {
-		t.Fatalf("Header map did not match %s", headers)
-	}
-
-	// check body
-	if testSubject.Body != "{ \"payload\": \"This is a body!\" }" {
-		t.Fatalf("Status code %s was not '{ \"payload\": \"This is a body!\" }'", testSubject.Body)
-	}
+	// assert on body
+	a.Equal("{ \"payload\": \"This is a body!\" }", testSubject.Body)
 }

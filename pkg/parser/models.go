@@ -17,7 +17,7 @@ type Endpoint struct {
 	Response Response
 }
 
-type Endpoints struct {
+type Root struct {
 	Name        string
 	Version     string
 	Description string

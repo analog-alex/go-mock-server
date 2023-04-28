@@ -8,19 +8,17 @@ import (
 	"net/http"
 )
 
-func RunServer(port string, endpoints []parser.Endpoint) bool {
+func RunServer(port string, endpoints []parser.Endpoint) {
 	for _, endpoint := range endpoints {
 		// build and bind the handler for each endpoint
 		http.HandleFunc(endpoint.Uri, createHandlerForEndpoint(endpoint))
+		log.Println("Registered route for: ", endpoint.Uri)
 	}
 
-	err := http.ListenAndServe(fmt.Sprintf("%s", port), nil /* nothing goes here */)
-	if err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf("%s", port), nil /* nothing goes here */); err != nil {
 		log.Println(err)
-		return false
+		panic(err)
 	}
-
-	return true
 }
 
 func createHandlerForEndpoint(endpoint parser.Endpoint) func(http.ResponseWriter, *http.Request) {

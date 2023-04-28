@@ -16,14 +16,14 @@ func getJsonByFileName(fileName string) string {
 	return string(data)
 }
 
-func LoadEndpointsFromContext(fileName string) []Endpoint {
+func LoadEndpointsFromContext(fileName string) Root {
+	var endpoints Root
 	content := getJsonByFileName(fileName)
-	var endpoints Endpoints
 
-	err := json.Unmarshal([]byte(content), &endpoints)
-	if err != nil {
+	if err := json.Unmarshal([]byte(content), &endpoints); err != nil {
+		// can't do anything with a bad file so we panic
 		panic(fmt.Sprintf("Could not parse JSON in %s to valid endpoints. Check documentation.", fileName))
 	}
 
-	return endpoints.Endpoints
+	return endpoints
 }
